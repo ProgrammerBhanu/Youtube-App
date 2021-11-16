@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Youtube App</title>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="left-btn">
+            <div class="icons">
+                <img src="./icons/menu.png" alt="">
+            </div>
+            <div class="part2-icons">
+                <div class="icons">
+                    <img src="./icons/home.png" alt="">
+                    <p>Home</p>
+                </div>
+                <div class="icons">
+                    <img src="./icons/direction.png" alt="">
+                    <p>Explore</p>
+                </div>
+                <div class="icons">
+                    <img src="./icons/subscribe.png" alt="">
+                    <p>Subscription</p>
+                </div>
+                <div class="icons">
+                    <img src="./icons/library.png" alt="">
+                    <p>Library</p>
+                </div>
+            </div>
+        </div>
+        <div id="nav-con">
+            <div class="logo">
+
+                <div id="logo-part">
+                    <img src="./icons/yt_logo.png" alt="">
+                </div>
+            </div>
+            <div id="search-bar">
+                <input type="text" name="search" id="search" placeholder="Search" />
+                <div onclick="searchVideo()" id="search-logo">
+                    <img src="./icons/search.png" alt="">
+                </div>
+                <div id="voice">
+                    <img src="./icons/microphone.png" alt="">
+                </div>
+            </div>
+            <div id="right-nav">
+                <div id="video-sign">
+                    <img src="./icons/video.png" alt="">
+                </div>
+                <div id="menu2">
+                    <img src="./icons/menu2.png" alt="">
+                </div>
+                <div>
+                    <img src="./icons/bell.png" alt="">
+                </div>
+                <div>
+                    <img src="./icons/user.png" alt="">
+                </div>
+            </div>
+            <div></div>
+        </div>
+        <div id="nav-con2">
+            <span>All</span>
+            <span>Live</span>
+            <span>Mixes</span>
+            <span>Music</span>
+            <span>Data Science</span>
+            <span>Computer Programming</span>
+            <span>Courses</span>
+            <span>Comedy</span>
+            <span>T-series</span>
+            <span>Stocks</span>
+            <span>Arts</span>
+
+        </div>
+
+        <div id="video-con"></div>
+    </nav>
+</body>
+<script>
+    var con = document.getElementById('video-con');
+
+    async function searchVideo() {
+
+        let query = document.getElementById("search").value;
+        let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?maxResults=10&q=${query}&type=video&key=AIzaSyDl0T3wQPjJsCvCjah-u7Zw4gKgsovkCJQ`);
+        let data = await res.json();
+        console.log(data);
+        appendVideo(data.items);
+    }
+
+    function appendVideo(items) {
+        con.innerHTML = null;
+        items.forEach(({
+            id: {
+                videoId
+            }
+        }) => {
+            let div = document.createElement('div');
+            div.innerHTML = `<iframe width="270" height="169" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            console.log(videoId);
+
+            con.appendChild(div);
+        });
+    }
+
+    async function popularvideo() {
+        let res = await fetch("https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=20&regionCode=US&key=AIzaSyDl0T3wQPjJsCvCjah-u7Zw4gKgsovkCJQ");
+        let data = await res.json();
+        console.log(data);
+        appendVideo(data.items);
+    }
+    popularvideo();
+</script>
+
+</html>
